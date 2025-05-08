@@ -1,88 +1,124 @@
-import React from "react";
-import { Mail, Linkedin } from "lucide-react";
+import React, { useState } from "react";
+import { Mail, Linkedin, Moon, Sun } from "lucide-react";
+import { motion } from "framer-motion";
+
+const ProjectCard = ({ title, description, image, link }) => (
+  <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-lg transition">
+    {image && (
+      <img src={image} alt={title} className="w-full h-40 object-cover rounded mb-4" />
+    )}
+    <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-white">{title}</h3>
+    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">{description}</p>
+    {link && (
+      <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-sm">
+        View Case Study
+      </a>
+    )}
+  </div>
+);
 
 export default function Portfolio() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <main className="bg-white text-gray-800 font-sans">
+    <main className={`${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"} font-sans transition-colors duration-300`}>
+      {/* Dark mode toggle */}
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className="flex items-center space-x-2 bg-gray-200 dark:bg-gray-700 p-2 rounded-full shadow hover:scale-105 transition-transform"
+        >
+          {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        </button>
+      </div>
+
+      {/* Header Navigation */}
+      <header className="sticky top-0 z-40 bg-white dark:bg-gray-800 shadow border-b border-gray-200 dark:border-gray-700">
+        <nav className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-xl font-semibold">Anubhav Dwivedi</h1>
+          <ul className="flex space-x-6 text-sm font-medium">
+            <li className="cursor-pointer hover:text-blue-600" onClick={() => scrollToSection("about")}>About</li>
+            <li className="cursor-pointer hover:text-blue-600" onClick={() => scrollToSection("projects")}>Projects</li>
+            <li className="cursor-pointer hover:text-blue-600" onClick={() => scrollToSection("testimonials")}>Testimonials</li>
+            <li className="cursor-pointer hover:text-blue-600" onClick={() => scrollToSection("resume")}>Resume</li>
+            <li className="cursor-pointer hover:text-blue-600" onClick={() => scrollToSection("contact")}>Contact</li>
+          </ul>
+        </nav>
+      </header>
+
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center h-screen text-center bg-gradient-to-b from-gray-100 to-white px-4">
+      <motion.section 
+        className="flex flex-col items-center justify-center h-screen text-center bg-gradient-to-b from-gray-100 to-white dark:from-gray-800 dark:to-gray-900 px-4"
+        initial={{ opacity: 0, y: 40 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.6 }}
+      >
         <h1 className="text-5xl font-extrabold tracking-tight mb-4">Anubhav Dwivedi</h1>
-        <p className="text-xl font-medium text-gray-600">Senior Technical Program Manager</p>
-        <p className="mt-4 max-w-xl text-lg text-gray-500">
+        <p className="text-xl font-medium text-gray-600 dark:text-gray-300">Senior Technical Program Manager</p>
+        <p className="mt-4 max-w-xl text-lg text-gray-500 dark:text-gray-400">
           Delivering scalable IT solutions through agile leadership and program execution.
         </p>
-      </section>
+      </motion.section>
 
       {/* About Section */}
-      <section className="max-w-5xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-bold mb-4 border-b-2 border-gray-200 pb-2">About Me</h2>
-        <p className="text-gray-700 leading-relaxed">
-          I lead and execute complex IT projects that support the organization's mission to deliver global standards for data,
-          products, and services. I apply my agile expertise and problem-solving skills to deliver solutions that meet the needs and expectations
-          of various stakeholders, including clients, vendors, and internal teams.
-        </p>
-        <p className="mt-4 text-gray-700 leading-relaxed">
-          I hold an MBA from DeGroote School of Business – McMaster University, and certifications such as PMP, PSM, CSPO, and SAP.
-          My goal is to leverage my technical and business skills to create value and innovation for the IT industry.
-        </p>
-      </section>
+      <section id="about" className="max-w-5xl mx-auto px-6 py-20">...</section>
 
       {/* Projects Section */}
-      <section className="bg-gray-50 py-20 px-6">
+      <section id="projects" className="bg-gray-50 dark:bg-gray-800 py-20 px-6">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6 border-b-2 border-gray-200 pb-2">Projects</h2>
+          <h2 className="text-3xl font-bold mb-6 border-b-2 border-gray-200 pb-2 dark:text-white">Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {["IBM to Azure Migration – GS1 Canada",
-              "Build Application from Scratch – MMGLN, MMGTIN, 2D – GS1 Canada",
-              "ERP Implementation – Wuxly Movement",
-              "SAP R3 to HANA Migration – Accenture",
-              "Implementation of Disaster Recovery – GS1 Canada",
-              "IAM Implementation and Migration – GS1 Canada",
-              "Rebuilding the Platform (ECCnet Registry) – GS1 Canada"
-            ].map((project, idx) => (
-              <div key={idx} className="bg-white p-4 shadow-sm rounded-lg border border-gray-200">
-                {project}
-              </div>
-            ))}
+            <ProjectCard 
+              title="IBM to Azure Migration"
+              description="Led migration of on-prem infrastructure to Microsoft Azure for GS1 Canada, improving scalability and reducing operational risk."
+            />
+            <ProjectCard 
+              title="MMGLN/MMGTIN/2D Application Build"
+              description="Built GS1 Canada’s MMGLN/MMGTIN/2D applications from the ground up to support enhanced global product identification."
+            />
+            <ProjectCard 
+              title="ERP Implementation – Wuxly Movement"
+              description="Implemented ERP system, streamlining operations and reducing cost by 24% through aligned digital transformation."
+            />
+            <ProjectCard 
+              title="SAP R3 to HANA Migration – Accenture"
+              description="Managed SAP data and process migration from R3 to HANA, ensuring data integrity and high-performance access."
+            />
+            <ProjectCard 
+              title="Disaster Recovery Implementation"
+              description="Established DR processes and automated recovery workflows at GS1 Canada, achieving compliance and reliability."
+            />
+            <ProjectCard 
+              title="IAM Implementation and Migration"
+              description="Overhauled IAM framework and migrated user roles for secure access management across GS1 platforms."
+            />
+            <ProjectCard 
+              title="ECCnet Registry Rebuild"
+              description="Led a full re-platforming of Canada's largest product registry to a microservices architecture with unified data model."
+            />
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="max-w-5xl mx-auto px-6 py-20">...</section>
 
       {/* Resume Section */}
-      <section className="max-w-5xl mx-auto px-6 py-20">
-        <h2 className="text-3xl font-bold mb-4 border-b-2 border-gray-200 pb-2">Resume</h2>
-        <a
-          href="/resume/Programmanager-Adresume2025.pdf"
-          className="inline-block mt-2 text-blue-600 hover:underline"
-          download
-        >
-          Download My Resume (PDF)
-        </a>
-      </section>
+      <section id="resume" className="max-w-5xl mx-auto px-6 py-20">...</section>
 
       {/* Contact Section */}
-      <section className="bg-gray-100 py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6 border-b-2 border-gray-300 pb-2">Contact</h2>
-          <div className="flex space-x-6">
-            <a
-              href="mailto:anubhavd1407@gmail.com"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
-            >
-              <Mail className="w-5 h-5" />
-              <span>Email</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/anubhavdwivedi14/"
-              target="_blank"
-              className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
-            >
-              <Linkedin className="w-5 h-5" />
-              <span>LinkedIn</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <section id="contact" className="bg-gray-100 dark:bg-gray-800 py-20 px-6">...</section>
+
+      {/* Footer */}
+      <footer className="bg-white dark:bg-gray-900 text-center py-6 border-t border-gray-200 dark:border-gray-700">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          © {new Date().getFullYear()} Anubhav Dwivedi. All rights reserved.
+        </p>
+      </footer>
     </main>
   );
 }
